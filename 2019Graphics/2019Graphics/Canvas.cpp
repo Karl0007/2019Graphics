@@ -35,28 +35,23 @@ void Canvas::paintEvent(QPaintEvent * e)
 	QImage img(m_painter->m_img, m_painter->m_width, m_painter->m_height, QImage::Format::Format_RGB888);
 	QPainter paint(this);
 	paint.drawImage(0, 0, img);
-	std::cout << "paint" << std::endl;
 }
 
 void Canvas::mousePressEvent(QMouseEvent * e)
 {
 	int r = 0;
 	if (e->button() == Qt::MouseButton::LeftButton) {
-		m_mouseClick = true;
-		m_zoom(0) += m_pressPos(0) - e->x();
-		m_zoom(1) += m_pressPos(1) - e->y();
-		m_pressPos(0) = e->x();
-		m_pressPos(1) = e->y();
 		switch (m_state)
 		{
+		case Canvas::State::TranslateStart:
+		case Canvas::State::RotateStart:
+		case Canvas::State::ScaleStart:
+			m_zoom.setZero();
 		case Canvas::State::LinePosStart:
 		case Canvas::State::EllipsePos:
 		case Canvas::State::PolygonStart:
 		case Canvas::State::CurveStart:
 		case Canvas::State::ClipStart:
-		case Canvas::State::TranslateStart:
-		case Canvas::State::RotateStart:
-		case Canvas::State::ScaleStart:
 			m_posList.clear();
 			m_state = State(int(m_state) + 1);
 		case Canvas::State::Polygoning:
@@ -72,6 +67,11 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 			if (m_state == LinePosEnd) m_painter->m_line.insert(r);
 			SetNull();
 			break;
+		case Canvas::ClipEnd:
+			r = m_window->ui.CurrentID->currentText().toInt();
+			m_painter->SetClip(r, std::min(m_posList[0], e->x()), std::min(m_posList[1], e->y()), std::max(m_posList[0], e->x()), std::max(m_posList[1], e->y()), m_window->ui.Cohen->isChecked());
+			SetNull();
+			break;
 		default:
 			break;
 		}
@@ -85,7 +85,7 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 		}
 		if (m_state == RotateEnd || m_state == ScaleEnd || m_state == TranslateEnd) {
 			r = m_window->ui.CurrentID->currentText().toInt();
-			m_painter->Delete(r);
+			delete m_painter->m_hash[r];
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
 			SetNull();
@@ -96,13 +96,20 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 void Canvas::mouseReleaseEvent(QMouseEvent * e)
 {
 	m_mouseClick = false;
-	m_zoom(0) += m_pressPos(0) - e->x();
-	m_zoom(1) += m_pressPos(1) - e->y();
+	//m_zoom(0) += m_pressPos(0) - e->x();
+	//m_zoom(1) += m_pressPos(1) - e->y();
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent * e)
 {
-	//std::cout << m_mouseClick << std::endl;
+	if (m_mouseClick) {
+		m_zoom(0) += m_pressPos(0) - e->x();
+		m_zoom(1) += m_pressPos(1) - e->y();
+	}
+	if (m_mouseClick = (e->buttons() & Qt::LeftButton)) {
+		m_pressPos(0) = e->x();
+		m_pressPos(1) = e->y();
+	}
 	delete m_painter->m_tmp;
 	auto ui = m_window->ui;
 	Byte rgb[] = { ui.Red->value() ,ui.Green->value(),ui.Blue->value() };
@@ -132,10 +139,10 @@ void Canvas::mouseMoveEvent(QMouseEvent * e)
 		m_painter->m_tmp = m_painter->m_current->Copy()->Translate(-m_zoom(0), -m_zoom(1));
 		break;
 	case Canvas::RotateEnd:
-		m_painter->m_tmp = m_painter->m_current->Copy()->Rotate(list[0], list[1], - list[1] + e->y() + list[0] - e->x());
+		m_painter->m_tmp = m_painter->m_current->Copy()->Rotate(list[0],list[1], -m_zoom(1));
 		break;
 	case Canvas::ScaleEnd:
-		m_painter->m_tmp = m_painter->m_current->Copy()->Scale(list[0], list[1], (list[0] - e->x())/100.0f , (list[1] - e->y()) / 100.0f);
+		m_painter->m_tmp = m_painter->m_current->Copy()->Scale(list[0], list[1], 1-m_zoom(0)/100.0f , 1+m_zoom(1)/ 100.0f);
 		break;
 	case Canvas::Null:
 		break;
@@ -148,6 +155,8 @@ void Canvas::mouseMoveEvent(QMouseEvent * e)
 
 void Canvas::SetNull()
 {
+	delete m_painter->m_tmp;
+	m_painter->m_tmp = nullptr;
 	m_state = Null;
 	m_zoom.setZero();
 	m_window->SetEnable(true);

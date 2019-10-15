@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 
+#define SAFE
+
 bool Curve::init = false;
 double Curve::Fac[Curve::Step][Curve::N][Curve::N] = {0};
 
@@ -57,8 +59,13 @@ void Graph::GetColor(Byte & R, Byte & G, Byte & B)
 
 }
 
+#ifdef  SAFE
+#define SetColor(vec) if(vec(0)>=0 && vec(0)<w && vec(1)>=0 && vec(1)<h) memcpy(img + (vec(0)+vec(1)*w)*3,m_RGB,3)
+#define SetColorXY(x,y) if(x>=0 && x<w && y>=0 && y<h) memcpy(img + (x+y*w)*3,m_RGB,3)
+#else
 #define SetColor(vec) memcpy(img + (vec(0)+vec(1)*w)*3,m_RGB,3)
 #define SetColorXY(x,y) memcpy(img + (x+y*w)*3,m_RGB,3)
+#endif
 
 static void inline DrawLine(Byte *img, int w, int h, bool DDA, Vector2i st, Vector2i ed,Byte m_RGB[]) {
 	Vector2i tmp = ed - st;
