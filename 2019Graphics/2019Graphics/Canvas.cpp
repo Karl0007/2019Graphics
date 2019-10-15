@@ -15,10 +15,13 @@ void Canvas::Reset(int w, int h) {
 	setFixedSize(w, h);
 }
 
-void Canvas::SaveCanvas(QString const & str)
+
+bool Canvas::SaveCanvas(QString const & dir, QString const & name)
 {
+	QDir qdir(dir);
 	QImage img(m_painter->m_img, m_painter->m_width, m_painter->m_height, QImage::Format::Format_RGB888);
-	img.save("./Results/" + str + ".bmp");
+	if (!qdir.exists()) qdir.mkpath(dir);
+	return img.save(dir + name + ".bmp");
 }
 
 void Canvas::SetColor(Byte R, Byte G, Byte B)

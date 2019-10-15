@@ -2,6 +2,7 @@
 #include "Head.h"
 #include <cstring>
 #include <vector>
+#include <iostream>
 using std::vector;
 
 class Graph

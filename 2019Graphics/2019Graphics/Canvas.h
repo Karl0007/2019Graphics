@@ -4,6 +4,7 @@
 #include <qpainter.h>
 #include <qevent.h>
 #include <iostream>
+#include <qdir.h>
 #include "Painter.h"
 #include "Head.h"
 
@@ -19,7 +20,7 @@ public:
 
 	void Reset(Painter* p) { m_painter = p; }
 	void Reset(int w, int h);
-	void SaveCanvas(QString const & str);
+	bool SaveCanvas(QString const & dir,QString const & name);
 	void SetColor(Byte R,Byte G,Byte B);
 
 

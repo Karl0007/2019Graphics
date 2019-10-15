@@ -85,7 +85,11 @@ void Line::Draw(Byte *img, int w, int h)
 	auto t2 = Transform(m_transform, ed);
 	if (Cohen ? ClipCohen(t1, t2) : ClipBarsky(t1, t2))
 		DrawLine(img, w, h, DDA,t1,t2, m_RGB);
-	cout << t1 << endl << t2 << endl;
+	//clean clip data
+	xmin = ymin = 0;
+	xmax = ymax = 1000;
+	m_transform.setIdentity();
+	st = t1, ed = t2;
 }
 
 #define Code(x,y) (((x<xmin)<<0) | ((x>xmax)<<1) | ((y<ymin)<<2) | ((y>ymax)<<3))
@@ -93,7 +97,6 @@ bool Line::ClipCohen(Vector2i& st,Vector2i &ed)
 {
 	int x1 = st(0), y1 = st(1), x2 = ed(0), y2 = ed(1);
 	int c1 = Code(x1, y1), c2 = Code(x2, y2);
-	cout << c1 << " " << c2 << endl;
 	while (c1 || c2) {
 		if (c1&c2) {
 			return false;
