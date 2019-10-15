@@ -127,13 +127,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Painter.cpp" />
-    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="MainWindow.ui" />
     <QtUic Include="Window.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -148,7 +146,6 @@
   <ItemGroup>
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Head.h" />
-    <QtMoc Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

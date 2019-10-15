@@ -45,6 +45,18 @@ Graph* Graph::Scale(int x, int y, float sx,float sy)
 	return this;
 }
 
+Graph * Graph::SetColor(Byte R, Byte G, Byte B)
+{
+	m_RGB[0] = R, m_RGB[1] = G, m_RGB[2] = B;
+	return this;
+}
+
+void Graph::GetColor(Byte & R, Byte & G, Byte & B)
+{
+	R = m_RGB[0],G = m_RGB[1],B = m_RGB[2];
+
+}
+
 #define SetColor(vec) memcpy(img + (vec(0)+vec(1)*w)*3,m_RGB,3)
 #define SetColorXY(x,y) memcpy(img + (x+y*w)*3,m_RGB,3)
 

@@ -4,17 +4,19 @@
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "ui_MainWindow.h"
 #include "ui_Window.h"
 #include "Canvas.h"
 #include "Painter.h"
 #include "Head.h"
 #include "qfiledialog.h"
+#include "qpushbutton.h"
 using std::stringstream;
 using std::string;
 
+class Canvas;
 class MainWindow : public QMainWindow
 {
+	friend class Canvas;
 	Q_OBJECT
 
 public:
@@ -22,11 +24,16 @@ public:
 
 	void ResetCanvas(int w, int h);
 	void SaveCanvas(QString const &name);
+	void SaveCanvas();
 	void SetColor(Byte R, Byte G, Byte B);
 	void OpenFile();
+	void UpdateID();
 
 private:
 	void Compile(QFile &file);
+	void SetEnable(bool b);
+
+
 	static inline string getStr(stringstream &ss) { string s; ss >> s; return s; }
 	static inline int getInt(stringstream &ss) { int i; ss >> i;  return i; }
 	static inline int getFloat(stringstream &ss) { float f; ss >> f;  return f; }
@@ -41,4 +48,16 @@ private:
 	Ui::Window ui;
 	Canvas* m_canvas;
 	Painter* m_painter;
+
+private slots:
+	void CurrentIDChange(QString const &str);
+	void StartLine();
+	void StartPolygon();
+	void StartEllispe();
+	void StartCurve();
+	void StartRotate();
+	void StartScale();
+	void StartTranslate();
+	void StartClip();
+	void DeleteCur();
 };

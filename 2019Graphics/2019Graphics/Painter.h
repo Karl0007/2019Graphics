@@ -3,10 +3,12 @@
 #include "qobject.h"
 #include "Head.h"
 #include "Graph.h"
+#include "MainWindow.h"
 
 class Painter : public QObject
 {
 	friend class Canvas;
+	friend class MainWindow;
 
 	Q_OBJECT
 
@@ -16,9 +18,10 @@ private:
 	Byte m_rgb[3];
 	Byte* m_img;
 	int m_width, m_height, m_deep;
+	Graph* m_current, *m_tmp;
 
 public:
-	Painter(int w = 0, int h = 0, int d = 3) : m_img(new Byte[w*h*d]), m_width(w), m_deep(d), m_height(h) { for (int i = 0; i < w*h*d; i++) m_img[i] = 255; m_rgb[0] = m_rgb[1] = m_rgb[2] = 0; }
+	Painter(int w = 0, int h = 0, int d = 3) : m_img(new Byte[w*h*d]), m_width(w), m_deep(d), m_height(h),m_current(nullptr),m_tmp(nullptr) { for (int i = 0; i < w*h*d; i++) m_img[i] = 255; m_rgb[0] = m_rgb[1] = m_rgb[2] = 0; }
 	~Painter() { delete m_img; for (auto i : m_hash) delete i.second; }
 
 	Painter* Reset(int w = 0, int h = 0, int d = 3) {
@@ -40,7 +43,8 @@ public:
 	void Rotate(int id, int x, int y, int r) { if (m_hash.count(id)) m_hash[id]->Rotate(x, y, r); }
 	void Scale(int id, int x, int y, float s) { if (m_hash.count(id)) m_hash[id]->Scale(x, y, s, s); }
 	void SetClip(int id, int x1, int y1, int x2, int y2, bool C) { if (m_line.count(id)) static_cast<Line*>(m_hash[id])->SetClip(x1, x2, y1, y2, C); };
-	void Delete(int id) { if (m_hash.count(id)) { m_line.erase(id); delete m_hash[id]; } }
+	void Delete(int id) { if (m_hash.count(id)) { m_line.erase(id); delete m_hash[id]; m_hash.erase(id); } }
+	QStringList GetIDList();
 	void DrawAll();
 
 	Painter(Painter const &) = delete;

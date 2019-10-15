@@ -19,9 +19,12 @@ public:
 	virtual ~Graph(){ }
 	
 	virtual void Draw(Byte *,int w,int h) = 0;
+	virtual Graph* Copy() = 0;
 	Graph* Translate(int x, int y);
 	Graph* Rotate(int x, int y,int r);
 	Graph* Scale(int x, int y, float sx,float sy);
+	Graph* SetColor(Byte R, Byte G, Byte B);
+	void GetColor(Byte &R, Byte &G, Byte &B);
 
 };
 
@@ -41,6 +44,8 @@ public:
 	void SetClip(int xn, int xx, int yn, int yx, bool C) { xmin = xn, xmax = xx, ymin = yn, ymax = yx, Cohen = C; }
 	bool ClipCohen(Vector2i& st, Vector2i &ed);
 	bool ClipBarsky(Vector2i& st, Vector2i &ed);
+	Line* Copy() { return new Line(*this); }
+
 };
 
 class Ellipse : public Graph
@@ -54,6 +59,8 @@ public:
 	}
 	~Ellipse() {}
 	void Draw(Byte *, int w, int h);
+	Ellipse* Copy() { return new Ellipse(*this); }
+
 };
 
 class Polygon : public Graph
@@ -71,6 +78,8 @@ public:
 	}
 	~Polygon() {}
 	void Draw(Byte *, int w, int h);
+	Polygon* Copy() { return new Polygon(*this); }
+
 };
 
 class Curve : public Graph
@@ -97,4 +106,5 @@ public:
 	}
 	~Curve() {}
 	void Draw(Byte *img, int w, int h);
+	Curve* Copy() { return new Curve(*this); }
 };
