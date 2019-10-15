@@ -25,7 +25,8 @@ public:
 	Graph* DrawLine(int id, int x1, int y1, int x2, int y2, bool dda) { return m_hash[id] = new Line(id,x1, y1, x2, y2, dda, m_rgb); }
 	Graph* DrawEllipse(int id, int x, int y, int rx, int ry) { return m_hash[id] = new Ellipse(id, x, y, rx, ry , m_rgb); }
 	Graph* DrawPolygon(int id, vector<int> const&p, bool dda) { return m_hash[id] = new Polygon(id, p, dda, m_rgb); }
-
+	Graph* DrawCurve(int id, vector<int> const&p, bool bezier) { return m_hash[id] = new Curve(id, p, bezier, m_rgb); }
+	void SetClip(int id, int x1, int y1, int x2, int y2, bool C) { static_cast<Line*>(m_hash[id])->SetClip(x1, x2, y1, y2, C); };
 	void DrawAll();
 
 	Painter(Painter const &) = delete;

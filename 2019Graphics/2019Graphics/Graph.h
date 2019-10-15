@@ -28,14 +28,18 @@ class Line : public Graph
 {
 private:
 	Vector2i st, ed;
-	bool DDA;
+	int xmin, xmax, ymin, ymax;
+	bool DDA,Cohen;
 public:
-	Line(int id, int x1, int y1, int x2, int y2,bool dda,Byte RGB[]) : Graph(id, RGB),DDA(dda) {
+	Line(int id, int x1, int y1, int x2, int y2,bool dda,Byte RGB[]) : Graph(id, RGB),DDA(dda),xmin(0),ymin(0),xmax(1000),ymax(1000),Cohen(true) {
 		st << x1, y1;
 		ed << x2, y2;
 	}
 	~Line(){}
 	void Draw(Byte *,int w,int h);
+	void SetClip(int xn, int xx, int yn, int yx, bool C) { xmin = xn, xmax = xx, ymin = yn, ymax = yx, Cohen = C; }
+	bool ClipCohen(Vector2i& st, Vector2i &ed);
+	bool ClipBarsky(Vector2i& st, Vector2i &ed);
 };
 
 class Ellipse : public Graph
@@ -66,4 +70,30 @@ public:
 	}
 	~Polygon() {}
 	void Draw(Byte *, int w, int h);
+};
+
+class Curve : public Graph
+{
+private:
+	vector<Vector2i> points;
+	bool bezier;
+	static const int Step = 500;
+	static const int N = 100;
+	static const int K = 3;
+	static bool init;
+	static double Fac[Step][N][N];
+
+public:
+	static void Init();
+
+	Curve(int id, vector<int> const&p, bool bezier, Byte RGB[]) : Graph(id, RGB), bezier(bezier) {
+		if (!init) Init();
+		for (int i = 0; i < p.size(); i += 2) {
+			Vector2i tmp;
+			tmp(0) = p[i], tmp(1) = p[i + 1];
+			points.push_back(std::move(tmp));
+		}
+	}
+	~Curve() {}
+	void Draw(Byte *img, int w, int h);
 };
