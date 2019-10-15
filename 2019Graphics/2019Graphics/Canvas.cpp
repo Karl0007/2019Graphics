@@ -1,7 +1,7 @@
 #include "Canvas.h"
 
 Canvas::Canvas(QWidget *parent, Painter* p,MainWindow *w)
-	: QWidget(parent), m_painter(p),m_mouseClick(false),m_window(w)
+	: QWidget(parent), m_painter(p),m_mouseClick(false),m_window(w),m_state(Null)
 {
 	setFixedSize(m_painter->m_width, m_painter->m_height);
 	setMouseTracking(true);
@@ -13,7 +13,7 @@ Canvas::~Canvas()
 
 void Canvas::Reset(int w, int h) { 
 	m_painter->Reset(w, h); 
-	setFixedSize(w, h);
+	//setFixedSize(w, h);
 }
 
 

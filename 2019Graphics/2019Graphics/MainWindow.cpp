@@ -33,6 +33,7 @@ void MainWindow::ResetCanvas(int w, int h)
 
 void MainWindow::SaveCanvas(QString const & name)
 {
+	m_painter->DrawAll();
 	m_canvas->SaveCanvas("./Results/", name);
 }
 
