@@ -16,9 +16,9 @@
   <widget class="QPushButton" name="Clean">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>500</x>
      <y>50</y>
-     <width>211</width>
+     <width>91</width>
      <height>31</height>
     </rect>
    </property>
@@ -355,6 +355,19 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Test">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>50</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TestTime</string>
    </property>
   </widget>
  </widget>

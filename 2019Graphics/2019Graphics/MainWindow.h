@@ -10,6 +10,7 @@
 #include "Head.h"
 #include "qfiledialog.h"
 #include "qpushbutton.h"
+#include "qdatetime.h"
 using std::stringstream;
 using std::string;
 
@@ -27,6 +28,7 @@ public:
 	bool SaveCanvas();
 	void SetColor(Byte R, Byte G, Byte B);
 	bool OpenFile(QString &log);
+	int TestTime();
 	void UpdateID();
 	void UpdateLog();
 	void UpdateLog(QString const & str);

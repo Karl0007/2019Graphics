@@ -8,9 +8,11 @@ using std::vector;
 class Graph
 {
 protected:
-
+	//变换矩阵
 	Matrix3f m_transform;
+	//颜色信息
 	Byte m_RGB[3];
+	//编号
 	int m_id;
 
 public:
@@ -18,10 +20,15 @@ public:
 	Graph(int id, Byte RGB[]) : m_id(id) { m_transform.setIdentity(); m_RGB[0] = RGB[0]; m_RGB[1] = RGB[1]; m_RGB[2] = RGB[2]; }
 	virtual ~Graph(){ }
 	
-	virtual void Draw(Byte *,int w,int h) = 0;
+	//在w*h的img数组中绘制当前图元
+	virtual void Draw(Byte *img,int w,int h) = 0;
+	//复制当前图元
 	virtual Graph* Copy() = 0;
+	//平移变换
 	Graph* Translate(int x, int y);
+	//旋转变换
 	Graph* Rotate(int x, int y,int r);
+	//缩放变换
 	Graph* Scale(int x, int y, float sx,float sy);
 	Graph* SetColor(Byte R, Byte G, Byte B);
 	void GetColor(Byte &R, Byte &G, Byte &B);

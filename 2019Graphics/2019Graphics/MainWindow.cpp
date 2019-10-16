@@ -5,13 +5,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	ui.setupUi(this);
 	this->setFixedSize(this->width(), this->height());
-	this->setWindowTitle("Graphic 2019 V0.8");
+	this->setWindowTitle("Graphic 2019 V0.81");
 	Curve::Init();
 	m_canvas = new Canvas(ui.IMG,m_painter = new Painter(360, 360),this);
 	UpdateID();
 	UpdateLog();
 	QObject::connect(ui.Clean, &QPushButton::pressed, [&]() {ResetCanvas(360, 360); UpdateID(); UpdateLog(u8"清除成功！"); });
-	QObject::connect(ui.OpenFile, &QPushButton::pressed, [&]() { QString log; OpenFile(log) ? UpdateLog(u8"文件读取成功！") : UpdateLog(u8"文件解析失败！"+log); });
+	QObject::connect(ui.Test, &QPushButton::pressed, [&]() { 	UpdateLog(u8"刷新时间:" + QString::number(TestTime()) + "ms"); });
+	QObject::connect(ui.OpenFile, &QPushButton::pressed, [&]() { QString log; OpenFile(log) ? UpdateLog(u8"文件读取成功！ 每帧绘制时间："+log) : UpdateLog(u8"文件解析失败！"+log); });
 	QObject::connect(ui.SaveImg, &QPushButton::pressed, [&]() {SaveCanvas() ? UpdateLog(u8"保存成功！") : UpdateLog(u8"保存失败！"); });
 	QObject::connect(ui.CurrentID, &QComboBox::currentTextChanged,this,&MainWindow::CurrentIDChange);
 	QObject::connect(ui.Line, &QPushButton::pressed,this, &MainWindow::StartLine);
@@ -57,10 +58,18 @@ bool MainWindow::OpenFile(QString &log)
 	QFile file(path);
 	ok &= file.open(QIODevice::ReadOnly | QIODevice::Text);
 	while (!file.atEnd() && (ok &= Compile(file, log, i)));
-	m_painter->DrawAll();
+	if (ok) log = QString::number(TestTime()) + "ms";
 	m_canvas->update();
 	UpdateID();
 	return ok;
+}
+
+int MainWindow::TestTime()
+{
+	QTime time(0, 0, 0, 0);
+	time.start();
+	m_painter->DrawAll();
+	return time.elapsed();
 }
 
 void MainWindow::UpdateID()
