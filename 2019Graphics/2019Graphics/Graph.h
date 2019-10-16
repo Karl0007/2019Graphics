@@ -95,7 +95,7 @@ class Curve : public Graph
 private:
 	vector<Vector2i> points;
 	bool bezier;
-	static const int Step = 500;
+	static const int Step = 2500;
 	static const int N = 100;
 	static const int K = 3;
 	static bool init;
