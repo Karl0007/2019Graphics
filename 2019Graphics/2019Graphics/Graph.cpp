@@ -100,13 +100,14 @@ static inline Vector2i Transform(Matrix3f const& transform, Vector2i vec) {
 
 void Line::Draw(Byte *img, int w, int h)
 {
+	bool res;
 	auto t1 = Transform(m_transform, st);
 	auto t2 = Transform(m_transform, ed);
-	if (Cohen ? ClipCohen(t1, t2) : ClipBarsky(t1, t2))
-		DrawLine(img, w, h, DDA,t1,t2, m_RGB);
+	if (res = Cohen ? ClipCohen(t1, t2) : ClipBarsky(t1, t2))
+		DrawLine(img, w, h, DDA, t1, t2, m_RGB);
 	//clean clip data
 	xmin = ymin = 0;
-	xmax = ymax = 1000;
+	xmax = ymax = 1000 * res;
 	m_transform.setIdentity();
 	st = t1, ed = t2;
 }

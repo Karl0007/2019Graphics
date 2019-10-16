@@ -1,5 +1,25 @@
 #include "Canvas.h"
 
+const QString Canvas::m_logInfo[] = {
+u8"画笔：直线；点击左键选择起点",
+u8"画笔：直线；点击左键选择终点",
+u8"画笔：椭圆；点击左键选择圆心",
+u8"画笔：椭圆；点击左键确定半径",
+u8"画笔：多边形；点击左键确定第一个点",
+u8"画笔：多边形；左键-继续加入 右键-完成绘制",
+u8"画笔：曲线；点击左键确定第一个点",
+u8"画笔：曲线；左键-继续加入 右键-完成绘制",
+u8"操作：裁剪；点击左键选择裁剪点",
+u8"操作：裁剪；点击左键确定裁剪范围",
+u8"操作：移动；按住左键拖动图形 点击右键确定",
+u8"操作：移动；按住左键拖动图形 点击右键确定",
+u8"操作：旋转；点击左键确定旋转中心",
+u8"操作：旋转；按住左键拖动旋转 点击右键确定",
+u8"操作：缩放；点击左键确定缩放中心",
+u8"操作：缩放；按住左键拖动缩放 点击右键确定",
+u8"点击右侧按钮选择操作"
+};
+
 Canvas::Canvas(QWidget *parent, Painter* p,MainWindow *w)
 	: QWidget(parent), m_painter(p),m_mouseClick(false),m_window(w),m_state(Null)
 {
@@ -12,6 +32,7 @@ Canvas::~Canvas()
 }
 
 void Canvas::Reset(int w, int h) { 
+	m_state = Null;
 	m_painter->Reset(w, h); 
 	//setFixedSize(w, h);
 }
@@ -22,7 +43,7 @@ bool Canvas::SaveCanvas(QString const & dir, QString const & name)
 	QDir qdir(dir);
 	QImage img(m_painter->m_img, m_painter->m_width, m_painter->m_height, QImage::Format::Format_RGB888);
 	if (!qdir.exists()) qdir.mkpath(dir);
-	return img.save(dir + name + ".bmp");
+	return img.save(dir + name);
 }
 
 void Canvas::SetColor(Byte R, Byte G, Byte B)
@@ -58,6 +79,7 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 		case Canvas::State::Curveing:
 			m_posList.push_back(e->x());
 			m_posList.push_back(e->y());
+			m_window->UpdateLog();
 			break;
 		case Canvas::LinePosEnd:
 		case Canvas::EllipseR:
@@ -65,11 +87,13 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
 			if (m_state == LinePosEnd) m_painter->m_line.insert(r);
+			m_window->UpdateLog(u8"绘制成功！");
 			SetNull();
 			break;
 		case Canvas::ClipEnd:
 			r = m_window->ui.CurrentID->currentText().toInt();
 			m_painter->SetClip(r, std::min(m_posList[0], e->x()), std::min(m_posList[1], e->y()), std::max(m_posList[0], e->x()), std::max(m_posList[1], e->y()), m_window->ui.Cohen->isChecked());
+			m_window->UpdateLog(u8"裁剪成功！");
 			SetNull();
 			break;
 		default:
@@ -81,6 +105,7 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 			while (m_painter->m_hash.count(r = rand()));
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
+			m_window->UpdateLog(u8"绘制成功！");
 			SetNull();
 		}
 		if (m_state == RotateEnd || m_state == ScaleEnd || m_state == TranslateEnd) {
@@ -88,6 +113,7 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 			delete m_painter->m_hash[r];
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
+			m_window->UpdateLog(u8"操作成功！");
 			SetNull();
 		}
 	}

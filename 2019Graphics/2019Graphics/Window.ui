@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>597</width>
-    <height>388</height>
+    <width>606</width>
+    <height>408</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -313,7 +313,7 @@
    <property name="geometry">
     <rect>
      <x>410</x>
-     <y>350</y>
+     <y>360</y>
      <width>151</width>
      <height>16</height>
     </rect>
@@ -329,7 +329,7 @@
    <property name="geometry">
     <rect>
      <x>410</x>
-     <y>370</y>
+     <y>380</y>
      <width>151</width>
      <height>16</height>
     </rect>
@@ -339,6 +339,22 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="Log">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>380</y>
+     <width>360</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
  </widget>

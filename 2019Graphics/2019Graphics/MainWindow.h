@@ -23,14 +23,16 @@ public:
 	MainWindow(QWidget *parent = Q_NULLPTR);
 
 	void ResetCanvas(int w, int h);
-	void SaveCanvas(QString const &name);
-	void SaveCanvas();
+	bool SaveCanvas(QString const &name);
+	bool SaveCanvas();
 	void SetColor(Byte R, Byte G, Byte B);
-	void OpenFile();
+	bool OpenFile(QString &log);
 	void UpdateID();
+	void UpdateLog();
+	void UpdateLog(QString const & str);
 
 private:
-	void Compile(QFile &file);
+	bool Compile(QFile &file, QString &log,int &line);
 	void SetEnable(bool b);
 
 

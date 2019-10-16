@@ -46,6 +46,7 @@ public:
 
 
 private:
+	static const QString m_logInfo[];
 	MainWindow *m_window;
 	Painter *m_painter;
 	Vector2i m_pressPos;

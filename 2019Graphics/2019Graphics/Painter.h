@@ -32,6 +32,7 @@ public:
 		for (auto i : m_hash) delete i.second;
 		m_hash.clear();
 		m_line.clear();
+		m_tmp = m_current = nullptr;
 		return this;
 	}
 	void SetColor(Byte R, Byte G, Byte B) { m_rgb[0] = R, m_rgb[1] = G, m_rgb[2] = B; }

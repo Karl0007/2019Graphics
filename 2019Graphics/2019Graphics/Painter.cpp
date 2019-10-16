@@ -11,8 +11,11 @@ QStringList Painter::GetIDList()
 void Painter::DrawAll()
 {
 	for (int i = 0; i < m_width*m_height*m_deep; i++) m_img[i] = 255;
+	bool del = false;
+	int id = 0;
 	for (auto &x : m_hash) {
 		x.second->Draw(m_img,m_width,m_height);
+		if (m_line.count(x.first) && static_cast<Line*>(x.second)->ToDelete()) del = true, id = x.first;
 	}
 	if (m_tmp) m_tmp->Draw(m_img,m_width,m_height);
 	if (m_current) {
@@ -25,4 +28,5 @@ void Painter::DrawAll()
 		m_current->Translate(0, -2)->Draw(m_img, m_width, m_height);
 		m_current->Translate(0, 1)->SetColor(tmp[0], tmp[1], tmp[2]);
 	}
+	if (del) Delete(id);
 }

@@ -42,6 +42,7 @@ public:
 	~Line(){}
 	void Draw(Byte *,int w,int h);
 	void SetClip(int xn, int xx, int yn, int yx, bool C) { xmin = xn, xmax = xx, ymin = yn, ymax = yx, Cohen = C; }
+	bool ToDelete() { return xmin == xmax && ymin == ymax; }
 	bool ClipCohen(Vector2i& st, Vector2i &ed);
 	bool ClipBarsky(Vector2i& st, Vector2i &ed);
 	Line* Copy() { return new Line(*this); }
