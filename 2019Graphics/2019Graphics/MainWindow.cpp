@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	ui.setupUi(this);
 	this->setFixedSize(this->width(), this->height());
-	this->setWindowTitle("Graphic 2019 V0.81");
+	this->setWindowTitle(QString("Graphic 2019 By karl07 ")+ VERSION);
 	Curve::Init();
 	m_canvas = new Canvas(ui.IMG,m_painter = new Painter(360, 360),this);
 	UpdateID();
