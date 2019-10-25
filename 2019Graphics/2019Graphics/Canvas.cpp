@@ -1,13 +1,13 @@
 #include "Canvas.h"
 
 const QString Canvas::m_logInfo[] = {
-u8"画笔：直线；点击左键选择起点",
-u8"画笔：直线；点击左键选择终点",
-u8"画笔：椭圆；点击左键选择圆心",
-u8"画笔：椭圆；点击左键确定半径",
-u8"画笔：多边形；点击左键确定第一个点",
+u8"画笔：直线；点击左键选择起点 右键取消",
+u8"画笔：直线；点击左键选择终点 右键取消",
+u8"画笔：椭圆；点击左键选择圆心 右键取消",
+u8"画笔：椭圆；点击左键确定半径 右键取消",
+u8"画笔：多边形；点击左键确定第一个点 右键取消",
 u8"画笔：多边形；左键-继续加入 右键-完成绘制",
-u8"画笔：曲线；点击左键确定第一个点",
+u8"画笔：曲线；点击左键确定第一个点 右键取消",
 u8"画笔：曲线；左键-继续加入 右键-完成绘制",
 u8"操作：裁剪；点击左键选择裁剪点",
 u8"操作：裁剪；点击左键确定裁剪范围",
@@ -87,8 +87,9 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
 			if (m_state == LinePosEnd) m_painter->m_line.insert(r);
-			m_window->UpdateLog(u8"绘制成功！");
-			SetNull();
+			m_window->UpdateLog(u8"绘制成功！ 左键继续绘制 右键返回");
+			SetState((State)((int)m_state - 1));
+			//SetNull();
 			break;
 		case Canvas::ClipEnd:
 			r = m_window->ui.CurrentID->currentText().toInt();
@@ -105,15 +106,21 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 			while (m_painter->m_hash.count(r = rand()));
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
-			m_window->UpdateLog(u8"绘制成功！");
-			SetNull();
-		}
-		if (m_state == RotateEnd || m_state == ScaleEnd || m_state == TranslateEnd) {
+			m_window->UpdateLog(u8"绘制成功！左键继续绘制 右键返回");
+			SetState((State)((int)m_state - 1));
+			//SetNull();
+		}else if (m_state == RotateEnd || m_state == ScaleEnd || m_state == TranslateEnd) {
 			r = m_window->ui.CurrentID->currentText().toInt();
 			delete m_painter->m_hash[r];
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
 			m_window->UpdateLog(u8"操作成功！");
+			SetNull();
+		}
+		else{
+			delete m_painter->m_tmp;
+			m_painter->m_tmp = nullptr;
+			m_window->UpdateLog(u8"取消成功！");
 			SetNull();
 		}
 	}
@@ -186,6 +193,16 @@ void Canvas::SetNull()
 	m_state = Null;
 	m_zoom.setZero();
 	m_window->SetEnable(true);
+	m_window->UpdateID();
+}
+
+inline void Canvas::SetState(State s)
+{
+	delete m_painter->m_tmp;
+	m_painter->m_tmp = nullptr;
+	m_state = s;
+	m_zoom.setZero();
+	m_window->SetEnable(false);
 	m_window->UpdateID();
 }
 

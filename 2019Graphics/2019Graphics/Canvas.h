@@ -61,5 +61,6 @@ private:
 	void mouseReleaseEvent(QMouseEvent *e);
 	void mouseMoveEvent(QMouseEvent *e);
 	inline void SetNull();
+	inline void SetState(State s);
 
 };
