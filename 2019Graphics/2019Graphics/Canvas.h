@@ -10,9 +10,11 @@
 
 class Painter;
 class MainWindow;
+class Graph;
 class Canvas : public QWidget
 {
 	friend class MainWindow;
+	friend class Graph;
 	Q_OBJECT
 
 public:
@@ -43,7 +45,7 @@ public:
 	void Reset(int w, int h);
 	bool SaveCanvas(QString const & dir,QString const & name);
 	void SetColor(Byte R,Byte G,Byte B);
-
+	void Copy(Graph* ptr);
 
 private:
 	static const QString m_logInfo[];
@@ -60,7 +62,8 @@ private:
 	//void mouseDoubleClickEvent(QMouseEvent *e);
 	void mouseReleaseEvent(QMouseEvent *e);
 	void mouseMoveEvent(QMouseEvent *e);
+	void wheelEvent(QWheelEvent *e);
 	inline void SetNull();
-	inline void SetState(State s);
+	inline void SetState(State s,bool log = false);
 
 };

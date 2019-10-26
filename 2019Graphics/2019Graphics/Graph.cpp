@@ -59,6 +59,11 @@ void Graph::GetColor(Byte & R, Byte & G, Byte & B)
 
 }
 
+int Graph::GetId()
+{
+	return m_id;
+}
+
 #ifdef  SAFE
 #define SetColor(vec) if(vec(0)>=0 && vec(0)<w && vec(1)>=0 && vec(1)<h) memcpy(img + (vec(0)+vec(1)*w)*3,m_RGB,3)
 #define SetColorXY(x,y) if(x>=0 && x<w && y>=0 && y<h) memcpy(img + (x+y*w)*3,m_RGB,3)

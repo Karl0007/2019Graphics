@@ -51,6 +51,19 @@ void Canvas::SetColor(Byte R, Byte G, Byte B)
 	m_painter->SetColor(R,G,B);
 }
 
+void Canvas::Copy(Graph * ptr)
+{
+	if (!ptr) {
+		m_window->UpdateLog(u8"请选择复制对象！");
+		return;
+	}
+	int r;
+	while (m_painter->m_hash.count(r = rand()));
+	if (m_painter->m_line.count(ptr->GetId())) m_painter->m_line.insert(r);
+	m_painter->m_hash[r] = ptr->Copy(r);
+	m_window->UpdateLog(u8"复制成功！");
+}
+
 void Canvas::paintEvent(QPaintEvent * e)
 {
 	QImage img(m_painter->m_img, m_painter->m_width, m_painter->m_height, QImage::Format::Format_RGB888);
@@ -84,6 +97,7 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 		case Canvas::LinePosEnd:
 		case Canvas::EllipseR:
 			while (m_painter->m_hash.count(r = rand()));
+			m_painter->m_tmp->SetID(r);
 			m_painter->m_hash[r] = m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
 			if (m_state == LinePosEnd) m_painter->m_line.insert(r);
@@ -120,7 +134,8 @@ void Canvas::mousePressEvent(QMouseEvent * e)
 		else{
 			delete m_painter->m_tmp;
 			m_painter->m_tmp = nullptr;
-			m_window->UpdateLog(u8"取消成功！");
+			if (m_state == Null) m_window->ChangeID("Null");
+			else m_window->UpdateLog(u8"取消成功！");
 			SetNull();
 		}
 	}
@@ -169,13 +184,13 @@ void Canvas::mouseMoveEvent(QMouseEvent * e)
 		m_painter->m_tmp = new Polygon(0, {std::min(list[0],e->x()),std::min(list[1],e->y()),std::max(list[0],e->x()),std::min(list[1],e->y()),std::max(list[0],e->x()),std::max(list[1],e->y()),std::min(list[0],e->x()),std::max(list[1],e->y()) }, ui.DDA->isChecked(), rgb);
 		break;
 	case Canvas::TranslateEnd:
-		m_painter->m_tmp = m_painter->m_current->Copy()->Translate(-m_zoom(0), -m_zoom(1));
+		m_painter->m_tmp = m_painter->m_current->Copy(m_painter->m_current->GetId())->Translate(-m_zoom(0), -m_zoom(1));
 		break;
 	case Canvas::RotateEnd:
-		m_painter->m_tmp = m_painter->m_current->Copy()->Rotate(list[0],list[1], -m_zoom(1));
+		m_painter->m_tmp = m_painter->m_current->Copy(m_painter->m_current->GetId())->Rotate(list[0],list[1], -m_zoom(1));
 		break;
 	case Canvas::ScaleEnd:
-		m_painter->m_tmp = m_painter->m_current->Copy()->Scale(list[0], list[1], 1-m_zoom(0)/100.0f , 1+m_zoom(1)/ 100.0f);
+		m_painter->m_tmp = m_painter->m_current->Copy(m_painter->m_current->GetId())->Scale(list[0], list[1], 1-m_zoom(0)/100.0f , 1+m_zoom(1)/ 100.0f);
 		break;
 	case Canvas::Null:
 		break;
@@ -184,6 +199,16 @@ void Canvas::mouseMoveEvent(QMouseEvent * e)
 	}
 	m_painter->DrawAll();
 	update();
+}
+
+void Canvas::wheelEvent(QWheelEvent * e)
+{
+	if (e->delta() > 0) {
+		m_window->ChangeIDIndex(-1);
+	}
+	else {
+		m_window->ChangeIDIndex(1);
+	}
 }
 
 void Canvas::SetNull()
@@ -196,13 +221,15 @@ void Canvas::SetNull()
 	m_window->UpdateID();
 }
 
-inline void Canvas::SetState(State s)
+inline void Canvas::SetState(State s,bool log)
 {
 	delete m_painter->m_tmp;
 	m_painter->m_tmp = nullptr;
 	m_state = s;
 	m_zoom.setZero();
 	m_window->SetEnable(false);
-	m_window->UpdateID();
+	if (!(s == State::ClipStart || s == State::RotateStart || s == State::TranslateStart || s == State::ScaleStart))
+		m_window->UpdateID();
+	if (log) m_window->UpdateLog();
 }
 

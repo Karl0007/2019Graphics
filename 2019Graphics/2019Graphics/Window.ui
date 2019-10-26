@@ -22,8 +22,11 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="whatsThis">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="text">
-    <string>Clean</string>
+    <string>Reset(R)</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="DDA">
@@ -48,8 +51,11 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="whatsThis">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="text">
-    <string>SaveImg</string>
+    <string>Save(S)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="rotate">
@@ -70,12 +76,12 @@
     <rect>
      <x>380</x>
      <y>210</y>
-     <width>90</width>
+     <width>41</width>
      <height>30</height>
     </rect>
    </property>
    <property name="text">
-    <string>delete</string>
+    <string>Del</string>
    </property>
   </widget>
   <widget class="QPushButton" name="Ellipse">
@@ -188,8 +194,11 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="whatsThis">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="text">
-    <string>OpenFile</string>
+    <string>Open(O)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="translate">
@@ -366,8 +375,27 @@
      <height>30</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="whatsThis">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="text">
-    <string>TestTime</string>
+    <string>Time(T)</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Copy">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>210</y>
+     <width>41</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Copy</string>
    </property>
   </widget>
  </widget>

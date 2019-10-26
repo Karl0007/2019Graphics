@@ -11,6 +11,8 @@
 #include "qfiledialog.h"
 #include "qpushbutton.h"
 #include "qdatetime.h"
+#include <functional>
+#include "qshortcut.h"
 using std::stringstream;
 using std::string;
 
@@ -32,6 +34,11 @@ public:
 	void UpdateID();
 	void UpdateLog();
 	void UpdateLog(QString const & str);
+	void ChangeID(QString const &str);
+	void InitButtons();
+	void InitShortCuts();
+	void addShortCuts(QString const &key, std::function<void(void)> fun);
+	void ChangeIDIndex(int x);
 
 private:
 	bool Compile(QFile &file, QString &log,int &line);
@@ -64,4 +71,5 @@ private slots:
 	void StartTranslate();
 	void StartClip();
 	void DeleteCur();
+	void CopyCur();
 };

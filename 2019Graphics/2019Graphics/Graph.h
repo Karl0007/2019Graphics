@@ -23,7 +23,7 @@ public:
 	//在w*h的img数组中绘制当前图元
 	virtual void Draw(Byte *img,int w,int h) = 0;
 	//复制当前图元
-	virtual Graph* Copy() = 0;
+	virtual Graph* Copy(int id) = 0;
 	//平移变换
 	Graph* Translate(int x, int y);
 	//旋转变换
@@ -32,6 +32,8 @@ public:
 	Graph* Scale(int x, int y, float sx,float sy);
 	Graph* SetColor(Byte R, Byte G, Byte B);
 	void GetColor(Byte &R, Byte &G, Byte &B);
+	int GetId();
+	void SetID(int id) { m_id = id; }
 
 };
 
@@ -52,7 +54,7 @@ public:
 	bool ToDelete() { return xmin == xmax && ymin == ymax; }
 	bool ClipCohen(Vector2i& st, Vector2i &ed);
 	bool ClipBarsky(Vector2i& st, Vector2i &ed);
-	Line* Copy() { return new Line(*this); }
+	Line* Copy(int id) { auto tmp = new Line(*this); tmp->m_id = id; return tmp; }
 
 };
 
@@ -67,7 +69,7 @@ public:
 	}
 	~Ellipse() {}
 	void Draw(Byte *, int w, int h);
-	Ellipse* Copy() { return new Ellipse(*this); }
+	Ellipse* Copy(int id) { auto tmp = new Ellipse(*this); tmp->m_id = id; return tmp; }
 
 };
 
@@ -86,7 +88,7 @@ public:
 	}
 	~Polygon() {}
 	void Draw(Byte *, int w, int h);
-	Polygon* Copy() { return new Polygon(*this); }
+	Polygon* Copy(int id) { auto tmp = new Polygon(*this); tmp->m_id = id; return tmp; }
 
 };
 
@@ -114,5 +116,5 @@ public:
 	}
 	~Curve() {}
 	void Draw(Byte *img, int w, int h);
-	Curve* Copy() { return new Curve(*this); }
+	Curve* Copy(int id) { auto tmp = new Curve(*this); tmp->m_id = id; return tmp; }
 };
