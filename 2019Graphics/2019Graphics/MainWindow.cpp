@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 	UpdateLog();
 	InitButtons();
 	InitShortCuts();
+	ResPath = "./Results";
 }
 
 
@@ -26,7 +27,7 @@ void MainWindow::ResetCanvas(int w, int h)
 bool MainWindow::SaveCanvas(QString const & name)
 {
 	m_painter->DrawAll();
-	return m_canvas->SaveCanvas("./Results/", name + ".bmp");
+	return m_canvas->SaveCanvas(ResPath, name + ".bmp");
 }
 
 bool MainWindow::SaveCanvas()
@@ -149,6 +150,22 @@ void MainWindow::ChangeIDIndex(int x)
 	int index = ui.CurrentID->currentIndex()+x;
 	if (index >= 0 && index <= m_painter->m_hash.size())
 		ui.CurrentID->setCurrentIndex(index);
+}
+
+bool MainWindow::Console(QString const & read, QString const & write)
+{
+	ResPath = write;
+	bool ok = true;
+	int i = 0;
+	auto path = read;
+	QString log;
+	QFile file(path);
+	ok &= file.open(QIODevice::ReadOnly | QIODevice::Text);
+	while (!file.atEnd() && (ok &= Compile(file, log, i)));
+	if (ok) log = QString::number(TestTime()) + "ms";
+	m_canvas->update();
+	UpdateID();
+	return ok;
 }
 
 void MainWindow::CurrentIDChange(QString const & str)

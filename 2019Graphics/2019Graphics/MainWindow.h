@@ -39,11 +39,12 @@ public:
 	void InitShortCuts();
 	void addShortCuts(QString const &key, std::function<void(void)> fun);
 	void ChangeIDIndex(int x);
+	bool Console(QString const &read, QString const & write);
 
 private:
 	bool Compile(QFile &file, QString &log,int &line);
 	void SetEnable(bool b);
-
+	QString ResPath;
 
 	static inline string getStr(stringstream &ss) { string s; ss >> s; return s; }
 	static inline int getInt(stringstream &ss) { int i; ss >> i;  return i; }

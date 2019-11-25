@@ -42,8 +42,8 @@ bool Canvas::SaveCanvas(QString const & dir, QString const & name)
 {
 	QDir qdir(dir);
 	QImage img(m_painter->m_img, m_painter->m_width, m_painter->m_height, QImage::Format::Format_RGB888);
-	if (!qdir.exists()) qdir.mkpath(dir);
-	return img.save(dir + name);
+	if (!qdir.exists()) qdir.mkpath("./");
+	return img.save(dir + "/" + name);
 }
 
 void Canvas::SetColor(Byte R, Byte G, Byte B)
